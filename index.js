@@ -1,4 +1,6 @@
 "use strict";
+const dotenv = require('dotenv');
+dotenv.config();
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
 process.title = 'node-chat';
@@ -122,6 +124,18 @@ wsServer.on('request', function(request) {
     // user disconnected
     connection.on('close', function(connection) {
         if (userName !== false && userColor !== false) {
+
+            let data = {'req':userName, 'res':userColor}
+
+          var sql = 'INSERT INTO bot_dialogs SET ?';
+
+            database.query( sql , data).then( () => {
+                console.log("inserted");
+            }).catch( err => {
+                console.log(err);
+            } );
+
+
             console.log((new Date()) + " Peer "
                 + connection.remoteAddress + " disconnected.");
             // remove user from the list of connected clients
@@ -132,3 +146,19 @@ wsServer.on('request', function(request) {
     });
 
 });
+
+const Database = require('./DB.js')
+
+let database = new Database({
+  host     : process.env.HOST,
+  user     : process.env.db_USER,
+  password : process.env.PASS,
+  database : process.env.DB
+})
+
+
+/*database.query( 'SELECT * FROM products' ).then( rows => {
+    console.log(rows);
+}).catch( err => {
+    console.log(err);
+} );*/

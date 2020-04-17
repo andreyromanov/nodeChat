@@ -23,10 +23,28 @@ $(function () {
         return;
     }
 
+    var name = 'test'
+
+    var password = 'test123'
+
+    var options = {
+
+    extraHeaders: {
+
+  // implementation of Basic access authentication 
+
+        Authorization: 'Basic ' + (name+ ':' + password).toString('base64')
+
+    }
+
+}
+
+
     // open connection
-    var connection = new WebSocket('ws://127.0.0.1:1337');
+    var connection = new WebSocket('ws://127.0.0.1:1337',options);
 
     connection.onopen = function () {
+
         // first we want users to enter their names
         input.removeAttr('disabled');
         status.text('Choose name:');
